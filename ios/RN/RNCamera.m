@@ -532,6 +532,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     }
 
     if (options[@"fps"]) {
+        NSLog(@"FPS provided:%@", fps);
         [self updateFrameRate:options[@"fps"]];
     }
 
