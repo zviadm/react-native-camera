@@ -532,7 +532,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     }
 
     if (options[@"fps"]) {
-        [self setFrameRate:options[@"fps"]];
+        [self updateFrameRate:options[@"fps"]];
     }
 
     // only update audio session when mute is not set or set to false, because otherwise there will be a flickering
@@ -1193,41 +1193,38 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     return device.activeVideoMinFrameDuration.timescale;
 }
 
-- (int)setFrameRate:(NSInteger)fps {
-    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
-#if TARGET_IPHONE_SIMULATOR
-    return device.activeVideoMinFrameDuration.timescale;
-#endif
+- (int)updateFrameRate:(NSInteger)fps {
+    dispatch_async(self.sessionQueue, ^{
+        AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+        CGFloat desiredFPS = (CGFloat)fps;
 
-    CGFloat desiredFPS = (CGFloat)fps;
+        AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        AVCaptureDeviceFormat *selectedFormat = nil;
+        int32_t maxWidth = 0;
 
-    AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceFormat *selectedFormat = nil;
-    int32_t maxWidth = 0;
+        for (AVCaptureDeviceFormat *format in [device formats]) {
+            for (AVFrameRateRange *range in format.videoSupportedFrameRateRanges) {
+                CMFormatDescriptionRef desc = format.formatDescription;
+                CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(desc);
+                int32_t width = dimensions.width;
 
-    for (AVCaptureDeviceFormat *format in [device formats]) {
-        for (AVFrameRateRange *range in format.videoSupportedFrameRateRanges) {
-            CMFormatDescriptionRef desc = format.formatDescription;
-            CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(desc);
-            int32_t width = dimensions.width;
-
-            if (range.minFrameRate <= desiredFPS && desiredFPS <= range.maxFrameRate && width >= maxWidth) {
-                selectedFormat = format;
-                maxWidth = width;
+                if (range.minFrameRate <= desiredFPS && desiredFPS <= range.maxFrameRate && width >= maxWidth) {
+                    selectedFormat = format;
+                    maxWidth = width;
+                }
             }
         }
-    }
 
-    if (selectedFormat) {
-        if ([device lockForConfiguration:nil]) {
-            //NSLog(@"selected format:%@", selectedFormat);
-            device.activeFormat = selectedFormat;
-            device.activeVideoMinFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
-            device.activeVideoMaxFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
-            [device unlockForConfiguration];
+        if (selectedFormat) {
+            if ([device lockForConfiguration:nil]) {
+                //NSLog(@"selected format:%@", selectedFormat);
+                device.activeFormat = selectedFormat;
+                device.activeVideoMinFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
+                device.activeVideoMaxFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
+                [device unlockForConfiguration];
+            }
         }
-    }
-    return device.activeVideoMinFrameDuration.timescale;
+    })
 }
 
 @end
