@@ -1224,7 +1224,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
                 [device unlockForConfiguration];
             }
         }
-    })
+    });
 }
 
 @end
