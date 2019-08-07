@@ -54,7 +54,7 @@ const requestPermissions = async (
           params,
         );
         if (typeof audioPermissionResult === 'boolean') {
-          hasRecordAudioPermissions = audioPermissionResult
+          hasRecordAudioPermissions = audioPermissionResult;
         } else {
           hasRecordAudioPermissions = audioPermissionResult === PermissionsAndroid.RESULTS.GRANTED;
         }
@@ -459,6 +459,10 @@ export default class Camera extends React.Component<PropsType, StateType> {
     return CameraManager.isRecording(this._cameraHandle);
   }
 
+  getFrameRate() {
+    return CameraManager.getFrameRate(this._cameraHandler);
+  }
+
   resumePreview() {
     CameraManager.resumePreview(this._cameraHandle);
   }
@@ -477,7 +481,10 @@ export default class Camera extends React.Component<PropsType, StateType> {
 
   _onStatusChange = () => {
     if (this.props.onStatusChange) {
-      this.props.onStatusChange({ cameraStatus: this.getStatus(), recordAudioPermissionStatus: this.state.recordAudioPermissionStatus });
+      this.props.onStatusChange({
+        cameraStatus: this.getStatus(),
+        recordAudioPermissionStatus: this.state.recordAudioPermissionStatus,
+      });
     }
   };
 
@@ -535,11 +542,14 @@ export default class Camera extends React.Component<PropsType, StateType> {
       ? RecordAudioPermissionStatusEnum.AUTHORIZED
       : RecordAudioPermissionStatusEnum.NOT_AUTHORIZED;
 
-    this.setState({
-      isAuthorized: hasCameraPermissions,
-      isAuthorizationChecked: true,
-      recordAudioPermissionStatus,
-    }, this._onStatusChange);
+    this.setState(
+      {
+        isAuthorized: hasCameraPermissions,
+        isAuthorizationChecked: true,
+        recordAudioPermissionStatus,
+      },
+      this._onStatusChange,
+    );
   }
 
   getStatus = (): Status => {

@@ -93,13 +93,11 @@ type RecordAudioPermissionStatus = Readonly<
     NOT_AUTHORIZED: 'NOT_AUTHORIZED';
   }>
 >;
-type FaCC = (
-  params: {
-    camera: RNCamera;
-    status: keyof CameraStatus;
-    recordAudioPermissionStatus: keyof RecordAudioPermissionStatus;
-  },
-) => JSX.Element;
+type FaCC = (params: {
+  camera: RNCamera;
+  status: keyof CameraStatus;
+  recordAudioPermissionStatus: keyof RecordAudioPermissionStatus;
+}) => JSX.Element;
 
 export interface Constants {
   CameraStatus: CameraStatus;
@@ -141,7 +139,10 @@ export interface RNCameraProps {
   captureAudio?: boolean;
 
   onCameraReady?(): void;
-  onStatusChange?(event: { cameraStatus: CameraStatus, recordAudioPermissionStatus: keyof RecordAudioPermissionStatus }): void;
+  onStatusChange?(event: {
+    cameraStatus: CameraStatus;
+    recordAudioPermissionStatus: keyof RecordAudioPermissionStatus;
+  }): void;
   onMountError?(error: { message: string }): void;
 
   /** Value: float from 0 to 1.0 */
@@ -305,6 +306,7 @@ export class RNCamera extends Component<RNCameraProps & ViewProperties> {
 
   /** iOS only */
   isRecording(): Promise<boolean>;
+  getFrameRate(): Promise<number>;
 }
 
 interface DetectionOptions {

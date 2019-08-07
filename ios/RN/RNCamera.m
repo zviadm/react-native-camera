@@ -971,7 +971,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         void (^resolveBlock)(void) = ^() {
             self.videoRecordedResolve(result);
         };
-        
+
         result[@"uri"] = outputFileURL.absoluteString;
         result[@"videoOrientation"] = @([self.orientation integerValue]);
         result[@"deviceOrientation"] = @([self.deviceOrientation integerValue]);
@@ -1182,6 +1182,11 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (bool)isRecording {
     return self.movieFileOutput.isRecording;
+}
+
+- (int)getFrameRate {
+    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+    return device.activeVideoMinFrameDuration.timescale;
 }
 
 @end
