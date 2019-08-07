@@ -1189,4 +1189,41 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     return device.activeVideoMinFrameDuration.timescale;
 }
 
+- (int)setFrameRate:(NSInteger)fps {
+    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+#if TARGET_IPHONE_SIMULATOR
+    return device.activeVideoMinFrameDuration.timescale;
+#endif
+
+    CGFloat desiredFPS = (CGFloat)fps;
+
+    AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceFormat *selectedFormat = nil;
+    int32_t maxWidth = 0;
+
+    for (AVCaptureDeviceFormat *format in [device formats]) {
+        for (AVFrameRateRange *range in format.videoSupportedFrameRateRanges) {
+            CMFormatDescriptionRef desc = format.formatDescription;
+            CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(desc);
+            int32_t width = dimensions.width;
+
+            if (range.minFrameRate <= desiredFPS && desiredFPS <= range.maxFrameRate && width >= maxWidth) {
+                selectedFormat = format;
+                maxWidth = width;
+            }
+        }
+    }
+
+    if (selectedFormat) {
+        if ([device lockForConfiguration:nil]) {
+            //NSLog(@"selected format:%@", selectedFormat);
+            device.activeFormat = selectedFormat;
+            device.activeVideoMinFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
+            device.activeVideoMaxFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
+            [device unlockForConfiguration];
+        }
+    }
+    return device.activeVideoMinFrameDuration.timescale;
+}
+
 @end

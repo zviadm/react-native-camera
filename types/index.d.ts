@@ -307,6 +307,7 @@ export class RNCamera extends Component<RNCameraProps & ViewProperties> {
   /** iOS only */
   isRecording(): Promise<boolean>;
   getFrameRate(): Promise<number>;
+  setFrameRate(fps: number): Promise<number>;
 }
 
 interface DetectionOptions {
