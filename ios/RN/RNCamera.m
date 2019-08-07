@@ -1193,7 +1193,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     return device.activeVideoMinFrameDuration.timescale;
 }
 
-- (int)updateFrameRate:(NSInteger)fps {
+- (void)updateFrameRate:(NSInteger)fps {
     dispatch_async(self.sessionQueue, ^{
         AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
         CGFloat desiredFPS = (CGFloat)fps;
