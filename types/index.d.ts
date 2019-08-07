@@ -268,7 +268,6 @@ interface TakePictureResponse {
 
 interface RecordOptions {
   quality?: keyof VideoQuality;
-  fps?: number;
   orientation?: keyof Orientation | OrientationNumber;
   maxDuration?: number;
   maxFileSize?: number;
@@ -281,6 +280,7 @@ interface RecordOptions {
 
   /** iOS only */
   codec?: keyof VideoCodec | VideoCodec[keyof VideoCodec];
+  fps?: number;
 }
 
 interface RecordResponse {
@@ -307,7 +307,6 @@ export class RNCamera extends Component<RNCameraProps & ViewProperties> {
 
   /** iOS only */
   isRecording(): Promise<boolean>;
-  getFrameRate(): Promise<number>;
 }
 
 interface DetectionOptions {

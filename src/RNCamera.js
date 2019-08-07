@@ -460,10 +460,6 @@ export default class Camera extends React.Component<PropsType, StateType> {
     return CameraManager.isRecording(this._cameraHandle);
   }
 
-  getFrameRate() {
-    return CameraManager.getFrameRate(this._cameraHandle);
-  }
-
   resumePreview() {
     CameraManager.resumePreview(this._cameraHandle);
   }

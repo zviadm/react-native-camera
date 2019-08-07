@@ -76,7 +76,6 @@
 - (void)onPictureSaved:(NSDictionary *)event;
 - (void)onText:(NSDictionary *)event;
 - (bool)isRecording;
-- (int)getFrameRate;
 
 @end
 
