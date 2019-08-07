@@ -532,7 +532,6 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     }
 
     if (options[@"fps"]) {
-        RCTLog(@"FPS provided:%@", options[@"fps"]);
         [self updateFrameRate:[options[@"fps"] integerValue]];
     }
 
