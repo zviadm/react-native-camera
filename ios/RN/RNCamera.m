@@ -1195,6 +1195,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (void)updateFrameRate:(NSInteger)fps {
     dispatch_async(self.sessionQueue, ^{
+        NSLog(@"updating FPS:%@", fps);
         AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
         CGFloat desiredFPS = (CGFloat)fps;
 
@@ -1217,7 +1218,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         if (selectedFormat) {
             if ([device lockForConfiguration:nil]) {
-                //NSLog(@"selected format:%@", selectedFormat);
+                NSLog(@"selected format:%@", selectedFormat);
                 device.activeFormat = selectedFormat;
                 device.activeVideoMinFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
                 device.activeVideoMaxFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
