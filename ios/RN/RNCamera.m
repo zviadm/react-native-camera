@@ -579,6 +579,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             }
         }
 
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:path];
         [self.movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         self.videoRecordedResolve = resolve;
