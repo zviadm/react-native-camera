@@ -77,7 +77,6 @@
 - (void)onText:(NSDictionary *)event;
 - (bool)isRecording;
 - (int)getFrameRate;
-- (int)setFrameRate:(NSInteger)fps;
 
 @end
 

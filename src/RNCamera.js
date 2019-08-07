@@ -127,6 +127,7 @@ type RecordingOptions = {
   maxFileSize?: number,
   orientation?: Orientation,
   quality?: number | string,
+  fps?: number,
   codec?: string,
   mute?: boolean,
   path?: string,
@@ -461,10 +462,6 @@ export default class Camera extends React.Component<PropsType, StateType> {
 
   getFrameRate() {
     return CameraManager.getFrameRate(this._cameraHandle);
-  }
-
-  setFrameRate(fps: number) {
-    return CameraManager.setFrameRate(this._cameraHandle, fps);
   }
 
   resumePreview() {

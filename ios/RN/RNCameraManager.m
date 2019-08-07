@@ -437,18 +437,4 @@ RCT_EXPORT_METHOD(getFrameRate:(nonnull NSNumber *)reactTag
     }];
 }
 
-RCT_EXPORT_METHOD(setFrameRate:(nonnull NSNumber *)reactTag
-                 fps:(NSInteger)fps
-                 resolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject) {
-    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RNCamera *> *viewRegistry) {
-        RNCamera *view = viewRegistry[reactTag];
-        if (![view isKindOfClass:[RNCamera class]]) {
-            RCTLogError(@"Invalid view returned from registry, expecting RNCamera, got: %@", view);
-        } else {
-            resolve(@([view setFrameRate:fps]));
-        }
-    }];
-}
-
 @end
