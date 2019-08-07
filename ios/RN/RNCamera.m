@@ -532,8 +532,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     }
 
     if (options[@"fps"]) {
-        NSLog(@"FPS provided:%@", fps);
-        [self updateFrameRate:options[@"fps"]];
+        NSLog(@"FPS provided:%@", options[@"fps"]);
+        [self updateFrameRate:[options[@"fps"] integerValue]];
     }
 
     // only update audio session when mute is not set or set to false, because otherwise there will be a flickering
@@ -1196,11 +1196,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (void)updateFrameRate:(NSInteger)fps {
     dispatch_async(self.sessionQueue, ^{
-        NSLog(@"updating FPS:%@", fps);
+        NSLog(@"updating FPS:%ld", fps);
         AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
         CGFloat desiredFPS = (CGFloat)fps;
 
-        AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         AVCaptureDeviceFormat *selectedFormat = nil;
         int32_t maxWidth = 0;
 
