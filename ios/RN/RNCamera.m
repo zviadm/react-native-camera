@@ -38,6 +38,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     if ((self = [super init])) {
         self.bridge = bridge;
         self.session = [AVCaptureSession new];
+        self.session.usesApplicationAudioSession = YES;
+        self.session.automaticallyConfiguresApplicationAudioSession = NO;
         self.sessionQueue = dispatch_queue_create("cameraQueue", DISPATCH_QUEUE_SERIAL);
         self.sensorOrientationChecker = [RNSensorOrientationChecker new];
         self.textDetector = [self createTextDetector];
@@ -1211,7 +1213,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         if (selectedFormat) {
             if ([device lockForConfiguration:nil]) {
-                RCTLog(@"RNCamera: updated format for FPS:%ld %@", fps, selectedFormat);
+                RCTLogInfo(@"RNCamera: updated format for FPS:%ld %@", fps, selectedFormat);
                 device.activeFormat = selectedFormat;
                 device.activeVideoMinFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
                 device.activeVideoMaxFrameDuration = CMTimeMake(1, (int32_t)desiredFPS);
