@@ -1193,6 +1193,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 - (void)updateFrameRate:(NSInteger)fps {
     dispatch_async(self.sessionQueue, ^{
         AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+        CMVideoDimensions selectedDimensions = CMVideoFormatDescriptionGetDimensions(
+            device.activeFormat.formatDescription);
+        int32_t selectedWidth = selectedDimensions.width;
         CGFloat desiredFPS = (CGFloat)fps;
 
         AVCaptureDeviceFormat *selectedFormat = nil;
@@ -1204,7 +1207,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
                 CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(desc);
                 int32_t width = dimensions.width;
 
-                if (range.minFrameRate <= desiredFPS && desiredFPS <= range.maxFrameRate && width >= maxWidth) {
+                if (range.minFrameRate <= desiredFPS && desiredFPS <= range.maxFrameRate &&
+                    width >= maxWidth && width <= selectedWidth) {
                     selectedFormat = format;
                     maxWidth = width;
                 }
