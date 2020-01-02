@@ -393,9 +393,10 @@ RCT_EXPORT_METHOD(checkRecordAudioAuthorizationStatus:(RCTPromiseResolveBlock)re
         return;
     }
 #endif
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        resolve(@(granted));
-    }];
+    resolve(@(NO));
+    // [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+    //     resolve(@(granted));
+    // }];
 }
 
 RCT_REMAP_METHOD(getAvailablePictureSizes,
